@@ -13,14 +13,23 @@ This repo is a complete AI toolkit for insurance. Every skill is a standalone pr
 
 | Skill | What it does | Time saved |
 |-------|-------------|------------|
-| 📨 Submission Intake Summarizer | Parse incoming submissions and extract key risk details into a structured summary. | ~15 min/submission |
-| 📊 Policy Comparison Builder | Side-by-side comparison of coverage options with plain-language explanations. | ~20 min/comparison |
-| 📝 Claims Narrative Drafter | Turn adjuster notes into a polished claims narrative with timeline and supporting details. | ~25 min/claim |
-| 🔄 Renewal Review Brief | Summarize account history, loss runs, and market conditions for the renewal meeting. | ~20 min/renewal |
-| ✉️ Coverage Explanation Letter | Draft a clear letter explaining coverage decisions to policyholders. | ~10 min/letter |
-| ✅ Compliance Checklist Generator | Generate state-specific compliance checklists for policy documentation. | ~15 min/checklist |
+| Claims Narrative Drafter | Transform raw adjuster notes, recorded statements, and claim documentation into a polished, chronological claims narrative suitable for the claim file, coverage determination, litigation support, or regulatory reporting. | ~25 min/claim |
+| FNOL Intake Assistant | Capture a complete, well-structured First Notice of Loss (FNOL) from unstructured inputs — phone transcripts, email bodies, chat logs, digital form submissions, and incident photos — and convert them into a standardized intake record with claim classification, coverage applicability, missing-data prompts, severity triage, and routing recommendation. | ~25 min/claim |
+| Fraud Red-Flag Summarizer | Analyze claim submissions and supporting documents to identify potential fraud indicators, produce a structured red-flag report with risk scoring, and recommend next steps (auto-approve, escalate, or investigate). | ~30 min/claim |
+| Loss Run Analyzer | Extract, organize, and analyze loss run data to identify claim trends, loss drivers, and actionable insights for underwriting decisions, renewal strategy, or risk management recommendations. | ~20 min/account |
+| Renewal Review Brief | Produce a comprehensive renewal review brief that synthesizes account history, loss experience, market conditions, and strategic considerations to prepare the team for renewal discussions with the insured or carrier. | ~20 min/renewal |
+| Submission Intake Summarizer | Parse incoming new business or renewal submission packages and extract key risk details into a structured, at-a-glance summary that enables rapid triage, appetite matching, and assignment to the appropriate underwriter. | ~15 min/submission |
+| Subrogation Opportunity Finder | Review an open or recently paid claim file and surface recovery opportunities — third-party liability, product defect, contractor negligence, landlord/tenant transfer of risk, uninsured motorist, and inter-company arbitration candidates — before the reserve hardens or evidence goes stale. | ~45 min/file |
+| Underwriting Risk Profile Builder | Synthesize submission data, supplemental applications, and publicly available information into a comprehensive risk profile that highlights key exposures, risk quality indicators, and underwriting considerations. | ~25 min/submission |
+| Cross-Sell Opportunity Analyzer | Scan an agency's book of business — or a single household or commercial account — and identify coverage gaps, rounding opportunities, life-event triggers, and logical next-policy recommendations, with a prioritized outreach plan the producer can execute the same day. | ~20 min/book review |
+| Policy Comparison Builder | Produce a clean, apples-to-apples side-by-side comparison of two or more insurance policy options — showing coverages, limits, deductibles, exclusions, endorsements, premium, and carrier strength — with a plain-language explanation of what each difference actually means for the insured, plus a ranked recommendation. | ~25 min/comparison |
+| Coverage Explanation Letter | Draft a clear, legally-sound letter that explains a coverage decision to a policyholder or claimant — whether the decision is a full grant of coverage, a partial coverage with limitations, a reservation of rights, or an outright denial — in plain language, with the required regulatory elements, and in a tone that protects the carrier or agency from bad-faith or E&O exposure. | ~20 min/letter |
+| Compliance Checklist Generator | Generate state-specific and regulation-specific compliance checklists for policy documentation, AI model governance, and operational audits. | ~15 min/checklist |
+| Email Drafter | Turn rough notes, a bullet list, or a short ask into a polished, on-voice business email that is ready to send — with the right subject line, length, structure, call-to-action, and (for insurance users) the correct regulatory and coverage-safe language. | ~10 min/email |
+| Meeting Summarizer | Summarize meeting notes into action items, decisions, and follow-ups. | ~10 min/use |
+| Review Responder | Craft professional responses to online reviews — both positive and negative. | ~10 min/use |
 
-**Total time saved per use: ~105+ minutes across all skills.**
+**Total time saved per use: ~315+ minutes across all skills.**
 
 ## Quick Start
 
