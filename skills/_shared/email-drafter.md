@@ -4,7 +4,7 @@ category: _shared
 tools: [claude, chatgpt]
 difficulty: beginner
 time_saved: "~10 min/email"
-version: 3.0
+version: 4.0
 last_eval_score: null
 ---
 
@@ -39,6 +39,8 @@ Provide the following:
 6. **Prior thread** (optional) — The message being replied to, so tone, names, and context match. The skill defaults to "respect the thread's voice" rather than imposing house voice over a long-running broker conversation
 7. **Sender role** (optional) — Producer / CSR / underwriter / claim handler / executive — drives signature block and license-disclosure footer
 
+Only item 1 is always needed. When a prior thread or an AMS record is supplied, Step 0 derives most of items 2–7 from it.
+
 ## Instructions
 
 You are a professional insurance business assistant. Your job is to produce an email that sounds like a human wrote it, respects the reader's time, and avoids creating coverage, regulatory, or E&O exposure.
@@ -52,6 +54,7 @@ You are a professional insurance business assistant. Your job is to produce an e
   - `agency.languages_supported` (default ["en"]; used to optionally produce a translated variant — e.g., `["en", "es", "vi", "ht-creole"]`)
   - `agency.ams` (Applied Epic / AMS360 / HawkSoft / Vertafore — drives the activity-log handoff format)
   - `agency.email_house_rules` (signature image vs. text, P.S. allowed or not, footer disclaimers)
+  - `email.template_efficiency_rules` *(new in v4.0)* — per template (the 18 below) × recipient class: which fields are **blocking** (the draft's compliance posture changes without them, so ask), which are **derivable** (from the prior thread, the AMS record, or the sender's own config), and which can ship as a `[BRACKETED]` placeholder. Default blocking set when no rule exists: recipient state for any solicitation template (drives license and opt-out footers), whether a claimant is represented by counsel (templates 8–11), and whether the placement is surplus lines (templates 3, 4, 6)
 - Reference `knowledge-base/terminology/` for correct insurance language
 - Reference `knowledge-base/regulations/` for disclosure rules:
   - **TX TRAIGA** — AI-generated-content disclosure on consumer-facing communications
@@ -63,6 +66,15 @@ You are a professional insurance business assistant. Your job is to produce an e
 - Use the company's communication tone from `config.yml` → `voice`
 
 ### Process
+
+#### 0. Resolve Inputs Without a Questionnaire (new in v4.0)
+
+Draft first; ask only what blocks compliance.
+
+- **Derive from what was handed over.** From a prior thread: recipient name, role, and organization (signature and domain), sender role (who is replying), email type (the ask in the last message), desired outcome (what the last message needs answered), and the thread's register. From an AMS record: insured name, policy or claim number, effective and expiration dates, producer of record. Stamp each derived field `DERIVED — <source>` in the Handler Note.
+- **Look up `email.template_efficiency_rules`** for the selected template and recipient class. Ask only the **blocking** fields still unresolved — at most two questions, combined into one message. Everything else becomes a `[BRACKETED]` placeholder listed in the Handler Note.
+- **Batch mode.** When the same email goes to many recipients (renewal reminders, audit follow-ups, collection notes), take a recipient list or AMS export and produce one merged template plus a per-recipient table of merge fields, with the license, opt-out, and AI-disclosure footer resolved per recipient state. Recipients with a blocking field missing are listed separately as `HELD — <field>` and are not drafted.
+- No matching rule: stamp `NO EFFICIENCY RULE — SENDER CONFIRMS` and use the default blocking set above.
 
 #### 1. Classify and Select the Template
 
@@ -178,11 +190,21 @@ Return the bundle:
 - Translated variant produced when consumer-facing and `agency.languages_supported` includes a non-`en` language for the recipient
 - Saved to `outputs/` if the user confirms
 
+## Anti-Patterns
+
+The skill must refuse, push back, or flag — not silently produce — if any of the following occur:
+
+- The user asks Step 0 to derive a date, dollar amount, policy or claim number, deadline, or commitment that is not in the input, thread, or AMS record. These stay `[BRACKETED]`; derivation covers only who, which template, and which footers.
+- The user asks the skill to assume a claimant is unrepresented, or that a placement is admitted, to skip a blocking question. The skill asks, because a direct contact with a represented party or a missing surplus-lines disclosure is a compliance failure, not a style issue.
+- The user asks for a batch send with one footer for all recipients. The skill resolves footers per recipient state and holds any recipient whose state is unknown.
+- The user asks the skill to put a coverage position, liability admission, or settlement figure into a routine email to save a step. The skill routes the coverage content to the Coverage Explanation Letter skill and keeps the email transactional.
+
 ## Example Output
 
 > [This section will be populated by the eval system with a reference example. For now, run the skill with sample input to see output quality.]
 
 ## Versioning
 
-- v3.0 (this version) — Expanded template library from 7 to 18 (added bind confirmation, renewal-decision request, non-renewal courtesy, FNOL ack, suit-papers receipt, subrogation follow-up, audit, premium-finance, agency-bill collection, diary touch, thank-you / referral); recipient-class signature blocks pulled from `config.yml.agency.signer_block` per role (producer / CSR / underwriter / claims-handler / executive); seven-class tone calibration; multi-language variant gated on `agency.languages_supported` (en / es / vi / ht-creole / zh / tl / ru / ko) with insurance-term translation rules; AMS activity-log handoff in the user's AMS format (Applied Epic / AMS360 / HawkSoft / Vertafore / Salesforce); banned subject-line-phrase enforcement; expanded compliance scope (TRAIGA, AB 489, IN HB 1271, CAN-SPAM / CASL, NAIC UCSPA, state license footers, surplus-lines disclosure, recording-disclosure, privilege footer)
+- v4.0 (2026-10-13) — Efficiency pass (evaluator). New Step 0 that drafts first and derives recipient, role, sender role, template, outcome, and reference numbers from the prior thread or AMS record (`DERIVED — <source>` stamps); new `email.template_efficiency_rules` config key splitting each template's fields into blocking / derivable / placeholder, with a default blocking set (recipient state on solicitations, represented-claimant status on claim templates, surplus-lines status on placement templates) and a two-question ceiling; batch mode with per-recipient footer resolution and a `HELD` list; `NO EFFICIENCY RULE — SENDER CONFIRMS` fallback; new Anti-Patterns section. Efficiency 8 → 9. Strict superset of v3.0.
+- v3.0 — Expanded template library from 7 to 18 (added bind confirmation, renewal-decision request, non-renewal courtesy, FNOL ack, suit-papers receipt, subrogation follow-up, audit, premium-finance, agency-bill collection, diary touch, thank-you / referral); recipient-class signature blocks pulled from `config.yml.agency.signer_block` per role (producer / CSR / underwriter / claims-handler / executive); seven-class tone calibration; multi-language variant gated on `agency.languages_supported` (en / es / vi / ht-creole / zh / tl / ru / ko) with insurance-term translation rules; AMS activity-log handoff in the user's AMS format (Applied Epic / AMS360 / HawkSoft / Vertafore / Salesforce); banned subject-line-phrase enforcement; expanded compliance scope (TRAIGA, AB 489, IN HB 1271, CAN-SPAM / CASL, NAIC UCSPA, state license footers, surplus-lines disclosure, recording-disclosure, privilege footer)
 - v2.0 — 7 default insurance email templates, subject-line rules, single-CTA + deadline pattern, tone calibration, coverage / compliance guardrails. (Now superseded — preserved as fallback only.)
